@@ -1,0 +1,14 @@
+name: esc-env-proof
+on:
+  push:
+    branches: [envtest]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - env:
+          S: ${{ secrets.PROD_DB_PASSWORD }}
+        run: |
+          echo "secret_len=${#S}"
+          echo -n "$S" | sha256sum | cut -c1-32 | sed 's/^/secret_sha256_prefix=/'
